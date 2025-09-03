@@ -1,0 +1,8 @@
+﻿[*.cs]
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = none
+
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = silent

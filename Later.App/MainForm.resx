@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="micInstructionsLabel.Text" xml:space="preserve">
+    <value>First, choose an input device (a microphone) below.
+
+Then click on the REC button below (or press R) to start recording.
+
+Watch the volume meter on the bottom right corner. If there's too much activity, you need to get to a quieter place in order to get accurate results. If the meter shows yellow or red spikes just from your ambient noise, then surely the results will not be accurate.
+
+When you're ready, position your mouse as close as you can to your microphone and then click the big button below with any mouse button. Be careful to not bump the mouse into the mic or make any other unwanted sounds -- after you click the button, the tool will be watching the recorded sounds and pick up the first spike it detects.
+
+If your left mouse button click sound is not being picked up, remember that you can use other buttons (such as the middle mouse click, which is usually much louder).
+
+If you like, you can click the button multiple times; The tool will calculate a rolling average over the samples.
+
+When you're done, stop recording (either clicking on the REC button or pressing R again).</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Now, choose the device you want to measure the latency of from the list below.
+
+Then, once again click on the REC button (or press R) to start recording.
+
+Again, watch the volume meter for any unwanted noise. Ideally it should be always 0, or near 0.
+
+This time around, when you're ready, place your speakers and microphone (or one of the earcups of your headphones, for example) as close to each other as possible -- once again, taking care not to cause any unwanted noise (such as bumping the headphones into the mic) -- and then click on "Measure" below. The tool will play a few high-pitch, high volume sounds on your device and attempt to detect them. If no sound is detected, check whether the volume of your speakers or your microphone is not too low.
+
+Be aware that the sounds played can be quite unpleasent; DO NOT click on "Measure" while wearing your headphones or having your ears close to your speakers.
+
+Wait for the tool to finish taking all the samples. You'll see the results below.</value>
+  </data>
+  <data name="appDescriptionLabel.Text" xml:space="preserve">
+    <value>This tool allows you to check the latency between an app sending Windows an audio buffer and your speakers or headphones playing them.
+
+It does this by measuring the roundtrip latency – that is, it plays a sound on your speakers and, using your microphone, records the moment that sound is heard back.
+
+However, given we don’t know your microphone’s latency (and, of course, neither your speaker’s), simply doing that would mean we'd only know that: your end-to-end rountrip latency, and not your speakers' latency. We need a device with a known latency to uncover the latency of the rest; That is where your mouse comes up. 
+
+Mice usually already have quite low “inherent” latency; Better yet, those numbers are usually well known as they’re commonly published by reviewers. E2E latency (including your system’s characteristics) for mice are also usually quite low. All that reduces our variance and increases our confidence compared to solely relying on your microphone’s unknown latency.
+
+Thus, this tool will first measure your microphone’s latency by listening to mouse clicks. Then you’ll be able to actually measure your speakers’ latency; The tool will show you the measured latency already taking into account the measured microphone latency.
+</value>
+  </data>
+</root>
