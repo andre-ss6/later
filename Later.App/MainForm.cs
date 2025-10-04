@@ -29,6 +29,8 @@ internal partial class MainForm : Form
 
     private void Initialize()
     {
+        KeyUp += MainForm_KeyUp;
+
         audioModeCombobox.SelectedIndex = 0;
 
         using var enumerator = new MMDeviceEnumerator();
@@ -67,6 +69,14 @@ internal partial class MainForm : Form
             }
         })]);
         outputDevicesCombobox.SelectedItem = outputDevicesCombobox.Items.Cast<AudioEndpointComboboxItem>().Single(d => d.DeviceId == defaultOutputDevice.ID);
+    }
+
+    private void MainForm_KeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.R)
+        {
+            startRecordingButton.PerformClick();
+        }
     }
 
     [MemberNotNull(nameof(CaptureDevice))]

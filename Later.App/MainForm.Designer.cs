@@ -338,6 +338,7 @@ partial class MainForm
         startRecordingButton.Size = new Size(294, 35);
         startRecordingButton.TabIndex = 1;
         startRecordingButton.Text = "⏺️REC";
+        startRecordingButton.UseMnemonic = false;
         startRecordingButton.UseVisualStyleBackColor = false;
         startRecordingButton.Click += StartRecordingButton_Click;
         // 
@@ -380,6 +381,7 @@ partial class MainForm
         ClientSize = new Size(934, 761);
         Controls.Add(panel1);
         Icon = (Icon)resources.GetObject("$this.Icon");
+        KeyPreview = true;
         MaximizeBox = false;
         MaximumSize = new Size(950, 800);
         MinimumSize = new Size(900, 670);
