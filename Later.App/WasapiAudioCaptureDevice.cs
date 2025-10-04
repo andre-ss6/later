@@ -20,10 +20,13 @@ internal class WasapiAudioCaptureDevice : IAudioCaptureDevice<WaveFormat, WaveIn
         _capture.RecordingStopped += OnRecordingStopped;
     }
 
-    public WasapiAudioCaptureDevice(MMDevice device, bool useEventSync = false, int audioBufferMillisecondsLength = 100)
-        : this(new WasapiCapture(device, useEventSync, audioBufferMillisecondsLength)) { }
+    public WasapiAudioCaptureDevice(MMDevice device, bool useEventSync = true, int audioBufferMillisecondsLength = 10)
+        : this(new WasapiCapture(device, useEventSync, audioBufferMillisecondsLength)) 
+    {
+        device.AudioEndpointVolume.MasterVolumeLevelScalar = 1f;
+    }
 
-    private WasapiAudioCaptureDevice(MMDeviceEnumerator enumerator, string? deviceID = null, bool useEventSync = false, int audioBufferMillisecondsLength = 100)
+    private WasapiAudioCaptureDevice(MMDeviceEnumerator enumerator, string? deviceID = null, bool useEventSync = true, int audioBufferMillisecondsLength = 10)
         : this(deviceID == null
               ? enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia)
               : enumerator.GetDevice(deviceID),
@@ -33,7 +36,7 @@ internal class WasapiAudioCaptureDevice : IAudioCaptureDevice<WaveFormat, WaveIn
         enumerator.Dispose();
     }
 
-    public WasapiAudioCaptureDevice(string deviceId, bool useEventSync = false, int audioBufferMillisecondsLength = 100)
+    public WasapiAudioCaptureDevice(string deviceId, bool useEventSync = true, int audioBufferMillisecondsLength = 10)
         : this(new MMDeviceEnumerator(), deviceId, useEventSync, audioBufferMillisecondsLength)
     {
     }

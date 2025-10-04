@@ -15,8 +15,10 @@ partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
         splitContainer1 = new SplitContainer();
+        inputMeasureTitleLabel = new Label();
         mouseLatencyUnitLabel = new Label();
         knownMouseLatencyLabel = new Label();
         mouseLatencyNumUpDown = new NumericUpDown();
@@ -26,6 +28,9 @@ partial class MainForm
         inputDevicesComboBox = new ComboBox();
         clickLatencyButton = new Button();
         micAverageLatencyLabel = new Label();
+        outputMeasureTitleLabel = new Label();
+        audioModeLabel = new Label();
+        audioModeCombobox = new ComboBox();
         outLastDetectionLatencyLabel = new Label();
         outAverageLatencyLabel = new Label();
         startOutputButton = new Button();
@@ -35,12 +40,11 @@ partial class MainForm
         micLatencyNumUpDown = new NumericUpDown();
         outputDevicesCombobox = new ComboBox();
         outputDevicesLabel = new Label();
-        appDescriptionLabel = new Label();
         startRecordingButton = new Button();
         volumeMeterProgressBar = new PaintableProgressBar();
         panel1 = new Panel();
-        panel2 = new Panel();
         bottomPanel = new Panel();
+        toolTip1 = new ToolTip(components);
         ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
         splitContainer1.Panel1.SuspendLayout();
         splitContainer1.Panel2.SuspendLayout();
@@ -48,7 +52,6 @@ partial class MainForm
         ((System.ComponentModel.ISupportInitialize)mouseLatencyNumUpDown).BeginInit();
         ((System.ComponentModel.ISupportInitialize)micLatencyNumUpDown).BeginInit();
         panel1.SuspendLayout();
-        panel2.SuspendLayout();
         bottomPanel.SuspendLayout();
         SuspendLayout();
         // 
@@ -56,13 +59,14 @@ partial class MainForm
         // 
         splitContainer1.BorderStyle = BorderStyle.FixedSingle;
         splitContainer1.Dock = DockStyle.Fill;
-        splitContainer1.Location = new Point(5, 184);
+        splitContainer1.Location = new Point(5, 5);
         splitContainer1.Name = "splitContainer1";
         // 
         // splitContainer1.Panel1
         // 
         splitContainer1.Panel1.AutoScroll = true;
         splitContainer1.Panel1.BackgroundImageLayout = ImageLayout.Zoom;
+        splitContainer1.Panel1.Controls.Add(inputMeasureTitleLabel);
         splitContainer1.Panel1.Controls.Add(mouseLatencyUnitLabel);
         splitContainer1.Panel1.Controls.Add(knownMouseLatencyLabel);
         splitContainer1.Panel1.Controls.Add(mouseLatencyNumUpDown);
@@ -77,6 +81,9 @@ partial class MainForm
         // splitContainer1.Panel2
         // 
         splitContainer1.Panel2.AutoScroll = true;
+        splitContainer1.Panel2.Controls.Add(outputMeasureTitleLabel);
+        splitContainer1.Panel2.Controls.Add(audioModeLabel);
+        splitContainer1.Panel2.Controls.Add(audioModeCombobox);
         splitContainer1.Panel2.Controls.Add(outLastDetectionLatencyLabel);
         splitContainer1.Panel2.Controls.Add(outAverageLatencyLabel);
         splitContainer1.Panel2.Controls.Add(startOutputButton);
@@ -87,16 +94,26 @@ partial class MainForm
         splitContainer1.Panel2.Controls.Add(outputDevicesCombobox);
         splitContainer1.Panel2.Controls.Add(outputDevicesLabel);
         splitContainer1.Panel2.Padding = new Padding(5);
-        splitContainer1.Size = new Size(916, 624);
-        splitContainer1.SplitterDistance = 455;
+        splitContainer1.Size = new Size(924, 703);
+        splitContainer1.SplitterDistance = 457;
         splitContainer1.TabIndex = 2;
         splitContainer1.TabStop = false;
+        // 
+        // inputMeasureTitleLabel
+        // 
+        inputMeasureTitleLabel.AutoSize = true;
+        inputMeasureTitleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        inputMeasureTitleLabel.Location = new Point(8, 9);
+        inputMeasureTitleLabel.Name = "inputMeasureTitleLabel";
+        inputMeasureTitleLabel.Size = new Size(208, 15);
+        inputMeasureTitleLabel.TabIndex = 11;
+        inputMeasureTitleLabel.Text = "1. Input (Mic) Latency Measurement";
         // 
         // mouseLatencyUnitLabel
         // 
         mouseLatencyUnitLabel.AutoSize = true;
         mouseLatencyUnitLabel.Font = new Font("Segoe UI", 9F);
-        mouseLatencyUnitLabel.Location = new Point(84, 470);
+        mouseLatencyUnitLabel.Location = new Point(84, 514);
         mouseLatencyUnitLabel.Name = "mouseLatencyUnitLabel";
         mouseLatencyUnitLabel.Size = new Size(23, 15);
         mouseLatencyUnitLabel.TabIndex = 10;
@@ -106,25 +123,27 @@ partial class MainForm
         // 
         knownMouseLatencyLabel.AutoSize = true;
         knownMouseLatencyLabel.Font = new Font("Segoe UI", 9F);
-        knownMouseLatencyLabel.Location = new Point(8, 450);
+        knownMouseLatencyLabel.Location = new Point(8, 494);
         knownMouseLatencyLabel.Name = "knownMouseLatencyLabel";
-        knownMouseLatencyLabel.Size = new Size(271, 15);
+        knownMouseLatencyLabel.Size = new Size(292, 15);
         knownMouseLatencyLabel.TabIndex = 9;
-        knownMouseLatencyLabel.Text = "Known Mouse Latency (leave default if unknown):";
+        knownMouseLatencyLabel.Text = "Known Mouse E2E Latency (leave default if unknown):";
         // 
         // mouseLatencyNumUpDown
         // 
-        mouseLatencyNumUpDown.Location = new Point(8, 468);
+        mouseLatencyNumUpDown.Location = new Point(8, 512);
+        mouseLatencyNumUpDown.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
         mouseLatencyNumUpDown.Name = "mouseLatencyNumUpDown";
         mouseLatencyNumUpDown.Size = new Size(72, 23);
         mouseLatencyNumUpDown.TabIndex = 8;
+        toolTip1.SetToolTip(mouseLatencyNumUpDown, "If you know the end-to-end (click-to-screen) latency of your mouse, enter it here. If not, leave at the default.");
         mouseLatencyNumUpDown.Value = new decimal(new int[] { 5, 0, 0, 0 });
         // 
         // micLastDetectionLatencyLabel
         // 
         micLastDetectionLatencyLabel.AutoSize = true;
         micLastDetectionLatencyLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        micLastDetectionLatencyLabel.Location = new Point(8, 577);
+        micLastDetectionLatencyLabel.Location = new Point(8, 624);
         micLastDetectionLatencyLabel.Name = "micLastDetectionLatencyLabel";
         micLastDetectionLatencyLabel.Size = new Size(163, 15);
         micLastDetectionLatencyLabel.TabIndex = 7;
@@ -133,9 +152,9 @@ partial class MainForm
         // micInstructionsLabel
         // 
         micInstructionsLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        micInstructionsLabel.Location = new Point(8, 9);
+        micInstructionsLabel.Location = new Point(8, 32);
         micInstructionsLabel.Name = "micInstructionsLabel";
-        micInstructionsLabel.Size = new Size(439, 384);
+        micInstructionsLabel.Size = new Size(441, 402);
         micInstructionsLabel.TabIndex = 6;
         micInstructionsLabel.Text = resources.GetString("micInstructionsLabel.Text");
         // 
@@ -143,7 +162,7 @@ partial class MainForm
         // 
         inputDevicesLabel.AutoSize = true;
         inputDevicesLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        inputDevicesLabel.Location = new Point(8, 393);
+        inputDevicesLabel.Location = new Point(8, 437);
         inputDevicesLabel.Name = "inputDevicesLabel";
         inputDevicesLabel.Size = new Size(138, 15);
         inputDevicesLabel.TabIndex = 1;
@@ -156,9 +175,9 @@ partial class MainForm
         inputDevicesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         inputDevicesComboBox.FormattingEnabled = true;
         inputDevicesComboBox.IntegralHeight = false;
-        inputDevicesComboBox.Location = new Point(8, 411);
+        inputDevicesComboBox.Location = new Point(8, 455);
         inputDevicesComboBox.Name = "inputDevicesComboBox";
-        inputDevicesComboBox.Size = new Size(439, 23);
+        inputDevicesComboBox.Size = new Size(441, 23);
         inputDevicesComboBox.TabIndex = 0;
         // 
         // clickLatencyButton
@@ -166,9 +185,9 @@ partial class MainForm
         clickLatencyButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         clickLatencyButton.Enabled = false;
         clickLatencyButton.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        clickLatencyButton.Location = new Point(8, 497);
+        clickLatencyButton.Location = new Point(8, 544);
         clickLatencyButton.Name = "clickLatencyButton";
-        clickLatencyButton.Size = new Size(437, 79);
+        clickLatencyButton.Size = new Size(439, 79);
         clickLatencyButton.TabIndex = 2;
         clickLatencyButton.Text = "Click me with any button!";
         clickLatencyButton.UseMnemonic = false;
@@ -179,17 +198,49 @@ partial class MainForm
         // 
         micAverageLatencyLabel.AutoSize = true;
         micAverageLatencyLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        micAverageLatencyLabel.Location = new Point(8, 592);
+        micAverageLatencyLabel.Location = new Point(8, 639);
         micAverageLatencyLabel.Name = "micAverageLatencyLabel";
         micAverageLatencyLabel.Size = new Size(199, 15);
         micAverageLatencyLabel.TabIndex = 4;
         micAverageLatencyLabel.Text = "Microphone Average Latency: 0ms";
         // 
+        // outputMeasureTitleLabel
+        // 
+        outputMeasureTitleLabel.AutoSize = true;
+        outputMeasureTitleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        outputMeasureTitleLabel.Location = new Point(8, 9);
+        outputMeasureTitleLabel.Name = "outputMeasureTitleLabel";
+        outputMeasureTitleLabel.Size = new Size(249, 15);
+        outputMeasureTitleLabel.TabIndex = 12;
+        outputMeasureTitleLabel.Text = "2. Output (Speakers) Latency Measurement";
+        // 
+        // audioModeLabel
+        // 
+        audioModeLabel.AutoSize = true;
+        audioModeLabel.Font = new Font("Segoe UI", 9F);
+        audioModeLabel.Location = new Point(8, 437);
+        audioModeLabel.Name = "audioModeLabel";
+        audioModeLabel.Size = new Size(108, 15);
+        audioModeLabel.TabIndex = 15;
+        audioModeLabel.Text = "Audio Share Mode:";
+        // 
+        // audioModeCombobox
+        // 
+        audioModeCombobox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        audioModeCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
+        audioModeCombobox.FormattingEnabled = true;
+        audioModeCombobox.Items.AddRange(new object[] { "Shared", "Exclusive" });
+        audioModeCombobox.Location = new Point(8, 455);
+        audioModeCombobox.Name = "audioModeCombobox";
+        audioModeCombobox.Size = new Size(445, 23);
+        audioModeCombobox.TabIndex = 14;
+        toolTip1.SetToolTip(audioModeCombobox, resources.GetString("audioModeCombobox.ToolTip"));
+        // 
         // outLastDetectionLatencyLabel
         // 
         outLastDetectionLatencyLabel.AutoSize = true;
         outLastDetectionLatencyLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        outLastDetectionLatencyLabel.Location = new Point(8, 579);
+        outLastDetectionLatencyLabel.Location = new Point(8, 626);
         outLastDetectionLatencyLabel.Name = "outLastDetectionLatencyLabel";
         outLastDetectionLatencyLabel.Size = new Size(163, 15);
         outLastDetectionLatencyLabel.TabIndex = 12;
@@ -199,7 +250,7 @@ partial class MainForm
         // 
         outAverageLatencyLabel.AutoSize = true;
         outAverageLatencyLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        outAverageLatencyLabel.Location = new Point(8, 594);
+        outAverageLatencyLabel.Location = new Point(8, 641);
         outAverageLatencyLabel.Name = "outAverageLatencyLabel";
         outAverageLatencyLabel.Size = new Size(172, 15);
         outAverageLatencyLabel.TabIndex = 11;
@@ -210,10 +261,10 @@ partial class MainForm
         startOutputButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         startOutputButton.Enabled = false;
         startOutputButton.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        startOutputButton.Location = new Point(8, 497);
+        startOutputButton.Location = new Point(8, 544);
         startOutputButton.Name = "startOutputButton";
-        startOutputButton.Size = new Size(437, 79);
-        startOutputButton.TabIndex = 11;
+        startOutputButton.Size = new Size(443, 79);
+        startOutputButton.TabIndex = 4;
         startOutputButton.Text = "Start sampling";
         startOutputButton.UseMnemonic = false;
         startOutputButton.UseVisualStyleBackColor = true;
@@ -223,7 +274,7 @@ partial class MainForm
         // 
         label2.AutoSize = true;
         label2.Font = new Font("Segoe UI", 9F);
-        label2.Location = new Point(86, 470);
+        label2.Location = new Point(86, 504);
         label2.Name = "label2";
         label2.Size = new Size(23, 15);
         label2.TabIndex = 13;
@@ -232,9 +283,9 @@ partial class MainForm
         // label1
         // 
         label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        label1.Location = new Point(8, 9);
+        label1.Location = new Point(8, 32);
         label1.Name = "label1";
-        label1.Size = new Size(439, 384);
+        label1.Size = new Size(445, 361);
         label1.TabIndex = 8;
         label1.Text = resources.GetString("label1.Text");
         // 
@@ -242,7 +293,7 @@ partial class MainForm
         // 
         knownMicLatencyLabel.AutoSize = true;
         knownMicLatencyLabel.Font = new Font("Segoe UI", 9F);
-        knownMicLatencyLabel.Location = new Point(8, 450);
+        knownMicLatencyLabel.Location = new Point(8, 484);
         knownMicLatencyLabel.Name = "knownMicLatencyLabel";
         knownMicLatencyLabel.Size = new Size(315, 15);
         knownMicLatencyLabel.TabIndex = 12;
@@ -250,10 +301,11 @@ partial class MainForm
         // 
         // micLatencyNumUpDown
         // 
-        micLatencyNumUpDown.Location = new Point(8, 468);
+        micLatencyNumUpDown.Location = new Point(8, 502);
         micLatencyNumUpDown.Name = "micLatencyNumUpDown";
         micLatencyNumUpDown.Size = new Size(72, 23);
         micLatencyNumUpDown.TabIndex = 11;
+        toolTip1.SetToolTip(micLatencyNumUpDown, resources.GetString("micLatencyNumUpDown.ToolTip"));
         // 
         // outputDevicesCombobox
         // 
@@ -262,7 +314,7 @@ partial class MainForm
         outputDevicesCombobox.FormattingEnabled = true;
         outputDevicesCombobox.Location = new Point(8, 411);
         outputDevicesCombobox.Name = "outputDevicesCombobox";
-        outputDevicesCombobox.Size = new Size(439, 23);
+        outputDevicesCombobox.Size = new Size(445, 23);
         outputDevicesCombobox.TabIndex = 3;
         // 
         // outputDevicesLabel
@@ -274,15 +326,6 @@ partial class MainForm
         outputDevicesLabel.Size = new Size(254, 15);
         outputDevicesLabel.TabIndex = 0;
         outputDevicesLabel.Text = "Choose the output device for measurement:";
-        // 
-        // appDescriptionLabel
-        // 
-        appDescriptionLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        appDescriptionLabel.Location = new Point(9, 4);
-        appDescriptionLabel.Name = "appDescriptionLabel";
-        appDescriptionLabel.Size = new Size(898, 177);
-        appDescriptionLabel.TabIndex = 5;
-        appDescriptionLabel.Text = resources.GetString("appDescriptionLabel.Text");
         // 
         // startRecordingButton
         // 
@@ -303,39 +346,29 @@ partial class MainForm
         volumeMeterProgressBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         volumeMeterProgressBar.Location = new Point(303, 10);
         volumeMeterProgressBar.Name = "volumeMeterProgressBar";
-        volumeMeterProgressBar.Size = new Size(609, 35);
+        volumeMeterProgressBar.Size = new Size(617, 35);
         volumeMeterProgressBar.TabIndex = 3;
         // 
         // panel1
         // 
         panel1.Controls.Add(splitContainer1);
-        panel1.Controls.Add(panel2);
         panel1.Controls.Add(bottomPanel);
         panel1.Dock = DockStyle.Fill;
         panel1.Location = new Point(0, 0);
         panel1.Margin = new Padding(0);
         panel1.Name = "panel1";
         panel1.Padding = new Padding(5);
-        panel1.Size = new Size(926, 861);
+        panel1.Size = new Size(934, 761);
         panel1.TabIndex = 3;
-        // 
-        // panel2
-        // 
-        panel2.Controls.Add(appDescriptionLabel);
-        panel2.Dock = DockStyle.Top;
-        panel2.Location = new Point(5, 5);
-        panel2.Name = "panel2";
-        panel2.Size = new Size(916, 179);
-        panel2.TabIndex = 6;
         // 
         // bottomPanel
         // 
         bottomPanel.Controls.Add(volumeMeterProgressBar);
         bottomPanel.Controls.Add(startRecordingButton);
         bottomPanel.Dock = DockStyle.Bottom;
-        bottomPanel.Location = new Point(5, 808);
+        bottomPanel.Location = new Point(5, 708);
         bottomPanel.Name = "bottomPanel";
-        bottomPanel.Size = new Size(916, 48);
+        bottomPanel.Size = new Size(924, 48);
         bottomPanel.TabIndex = 3;
         // 
         // MainForm
@@ -343,13 +376,15 @@ partial class MainForm
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         AutoScroll = true;
-        ClientSize = new Size(926, 861);
+        AutoSize = true;
+        ClientSize = new Size(934, 761);
         Controls.Add(panel1);
+        Icon = (Icon)resources.GetObject("$this.Icon");
         MaximizeBox = false;
-        MaximumSize = new Size(1000, 1200);
-        MinimumSize = new Size(650, 900);
+        MaximumSize = new Size(950, 800);
+        MinimumSize = new Size(900, 670);
         Name = "MainForm";
-        Text = "Later";
+        Text = "Later - Audio Latency Analyzer";
         splitContainer1.Panel1.ResumeLayout(false);
         splitContainer1.Panel1.PerformLayout();
         splitContainer1.Panel2.ResumeLayout(false);
@@ -359,7 +394,6 @@ partial class MainForm
         ((System.ComponentModel.ISupportInitialize)mouseLatencyNumUpDown).EndInit();
         ((System.ComponentModel.ISupportInitialize)micLatencyNumUpDown).EndInit();
         panel1.ResumeLayout(false);
-        panel2.ResumeLayout(false);
         bottomPanel.ResumeLayout(false);
         ResumeLayout(false);
     }
@@ -377,8 +411,6 @@ partial class MainForm
     private Label outputDevicesLabel;
     private ComboBox outputDevicesCombobox;
     private Panel bottomPanel;
-    private Label appDescriptionLabel;
-    private Panel panel2;
     private Label micInstructionsLabel;
     private Label micLastDetectionLatencyLabel;
     private Label label1;
@@ -391,4 +423,9 @@ partial class MainForm
     private Button startOutputButton;
     private Label outLastDetectionLatencyLabel;
     private Label outAverageLatencyLabel;
+    private Label audioModeLabel;
+    private ComboBox audioModeCombobox;
+    private ToolTip toolTip1;
+    private Label inputMeasureTitleLabel;
+    private Label outputMeasureTitleLabel;
 }

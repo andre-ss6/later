@@ -4,6 +4,7 @@ using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace Later.App;
@@ -28,6 +29,8 @@ internal partial class MainForm : Form
 
     private void Initialize()
     {
+        audioModeCombobox.SelectedIndex = 0;
+
         using var enumerator = new MMDeviceEnumerator();
         var defaultCaptureDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
         var defaultOutputDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
@@ -64,6 +67,118 @@ internal partial class MainForm : Form
             }
         })]);
         outputDevicesCombobox.SelectedItem = outputDevicesCombobox.Items.Cast<AudioEndpointComboboxItem>().Single(d => d.DeviceId == defaultOutputDevice.ID);
+    }
+
+    [MemberNotNull(nameof(CaptureDevice))]
+    private void InitializeCaptureDevice(string deviceId)
+    {
+        DisposeCaptureDevice();
+        CaptureDevice = new NoiseGateFilter(deviceId, true, 10);
+        CaptureDevice.CaptureStopped += CaptureDevice_CaptureStopped;
+        ((IAudioFilter<NoiseGateFilteredWaveInEventArgs>)CaptureDevice).DataAvailable += CaptureDevice_DataAvailable;
+    }
+
+    [MemberNotNullWhen(true, nameof(OutDevice))]
+    private bool InitializeOutputDevice(string deviceId)
+    {
+        DisposeOutputDevice();
+
+        using var enumerator = new MMDeviceEnumerator();
+        var device = enumerator.GetDevice(deviceId);
+
+        var shareMode = (AudioClientShareMode)audioModeCombobox.SelectedIndex;
+        var format = device.AudioClient.MixFormat;
+
+        bool exclusiveModeUnsupported = false;
+        try
+        {
+            // There's currently a bug on NAudio where calling IsFormatSupported
+            // with shareMode = exclusive on a device that does not allow exclusive mode
+            // throws an exception.
+            // Also, we don't test for formats in general because this function is unreliable
+            // (it'll return false even when the format works perfectly fine if you Init with it)
+            device.AudioClient.IsFormatSupported(shareMode, format);
+        }
+        catch (COMException e) when (e.ErrorCode == -2004287474) // AUDCLNT_E_EXCLUSIVE_MODE_NOT_ALLOWED 
+        {
+            exclusiveModeUnsupported = true;
+        }
+
+
+        if (exclusiveModeUnsupported)
+        {
+            MessageBox.Show("This device does not allow Exclusive mode.");
+            device.Dispose();
+            return false;
+        }
+
+        OutDevice = new WasapiOut(device, shareMode, true, 5);
+
+        OutDevice.PlaybackStopped += OutDevice_PlaybackStopped;
+
+        OutDevice.Init(GenerateSineWaveSound(format));
+
+        return true;
+
+        ISampleProvider GenerateSineWaveSound(WaveFormat format)
+        {
+            var sg = new SignalGenerator(format.SampleRate, 2)
+            {
+                Gain = 0.3 * (shareMode == AudioClientShareMode.Shared ? 1 : device.AudioEndpointVolume.MasterVolumeLevelScalar),
+                Frequency = 1000,
+                Type = SignalGeneratorType.Sin,
+            }.Take(TimeSpan.FromSeconds(5));
+
+            return sg;
+        }
+    }
+
+    private async Task StartRecording()
+    {
+        if (inputDevicesComboBox.SelectedItem == null)
+        {
+            return;
+        }
+
+        _latencySamples.Clear();
+
+        if (micLatencyNumUpDown.Value > 0)
+        {
+            CurrentAnalysis = AnalysisState.OutputLatency;
+            startOutputButton.Enabled = true;
+        }
+        else
+        {
+            CurrentAnalysis = AnalysisState.InputLatency;
+            clickLatencyButton.Enabled = true;
+        }
+        startRecordingButton.BackColor = Color.Red;
+        startRecordingButton.ForeColor = Color.Black;
+        inputDevicesComboBox.Enabled = false;
+        mouseLatencyNumUpDown.Enabled = false;
+        outputDevicesCombobox.Enabled = false;
+        audioModeCombobox.Enabled = false;
+        micLatencyNumUpDown.Enabled = false;
+
+        InitializeCaptureDevice(((AudioEndpointComboboxItem)inputDevicesComboBox.SelectedItem).DeviceId);
+        await CaptureDevice.StartCapturingAsync();
+    }
+
+    private void StopRecording()
+    {
+        DisposeCaptureDevice();
+        DisposeOutputDevice();
+
+        volumeMeterProgressBar.Value = 0;
+        startOutputButton.Enabled = false;
+        clickLatencyButton.Enabled = false;
+        startRecordingButton.BackColor = Color.White;
+        startRecordingButton.ForeColor = Color.Red;
+        inputDevicesComboBox.Enabled = true;
+        mouseLatencyNumUpDown.Enabled = true;
+        outputDevicesCombobox.Enabled = true;
+        audioModeCombobox.Enabled = true;
+        micLatencyNumUpDown.Enabled = true;
     }
 
     private void CaptureDevice_DataAvailable(object? sender, NoiseGateFilteredWaveInEventArgs e)
@@ -132,8 +247,24 @@ internal partial class MainForm : Form
         }));
     }
 
+    private void OutDevice_PlaybackStopped(object? sender, StoppedEventArgs e)
+    {
+        BeginInvoke(new Action(() =>
+        {
+            if (e.Exception != null)
+            {
+                DisposeOutputDevice();
+                MessageBox.Show($"An error occurred during playback: {e.Exception.Message}.", "Playback error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }));
+    }
+
     private async void StartRecordingButton_Click(object sender, EventArgs e)
     {
+        PlayedAt = null;
+        ClickedAt = null;
+        DetectedAt = null;
+
         if (CaptureDevice == null || CaptureDevice.CaptureState == CaptureState.Stopped)
         {
             await StartRecording();
@@ -142,9 +273,6 @@ internal partial class MainForm : Form
         {
             StopRecording();
         }
-
-        ClickedAt = null;
-        DetectedAt = null;
     }
 
     private void ClickLatencyButton_MouseDown(object sender, MouseEventArgs e)
@@ -164,89 +292,21 @@ internal partial class MainForm : Form
 
         startOutputButton.Enabled = false;
 
-        InitializeOutputDevice(((AudioEndpointComboboxItem)outputDevicesCombobox.SelectedItem).DeviceId);
-        do
+        if (InitializeOutputDevice(((AudioEndpointComboboxItem)outputDevicesCombobox.SelectedItem).DeviceId))
         {
-            DetectedAt = null;
-            OutDevice?.Stop();
-            await Task.Delay(1500);
-            OutDevice?.Play();
-            PlayedAt = DateTimeOffset.UtcNow;
-            await Task.Delay(500);
+            do
+            {
+                DetectedAt = null;
+                OutDevice?.Stop();
+                await Task.Delay(1500);
+                OutDevice?.Play();
+                PlayedAt = DateTimeOffset.UtcNow;
+                await Task.Delay(500);
+            }
+            while (OutDevice != null && OutDevice.PlaybackState != PlaybackState.Stopped);
         }
-        while (OutDevice != null && OutDevice.PlaybackState != PlaybackState.Stopped);
 
         StopRecording();
-    }
-
-    private void StopRecording()
-    {
-        DisposeCaptureDevice();
-        DisposeOutputDevice();
-
-        volumeMeterProgressBar.Value = 0;
-        startOutputButton.Enabled = false;
-        clickLatencyButton.Enabled = false;
-        startRecordingButton.BackColor = Color.White;
-        startRecordingButton.ForeColor = Color.Red;
-        mouseLatencyNumUpDown.Enabled = true;
-        micLatencyNumUpDown.Enabled = true;
-    }
-
-    private async Task StartRecording()
-    {
-        if (inputDevicesComboBox.SelectedItem == null)
-        {
-            return;
-        }
-
-        _latencySamples.Clear();
-
-        if (micLatencyNumUpDown.Value > 0)
-        {
-            CurrentAnalysis = AnalysisState.OutputLatency;
-            startOutputButton.Enabled = true;
-        }
-        else
-        {
-            CurrentAnalysis = AnalysisState.InputLatency;
-            clickLatencyButton.Enabled = true;
-        }
-        startRecordingButton.BackColor = Color.Red;
-        startRecordingButton.ForeColor = Color.Black;
-        mouseLatencyNumUpDown.Enabled = false;
-        micLatencyNumUpDown.Enabled = false;
-
-        InitializeCaptureDevice(((AudioEndpointComboboxItem)inputDevicesComboBox.SelectedItem).DeviceId);
-        await CaptureDevice.StartCapturingAsync();
-    }
-
-    [MemberNotNull(nameof(CaptureDevice))]
-    private void InitializeCaptureDevice(string deviceId)
-    {
-        DisposeCaptureDevice();
-        CaptureDevice = new NoiseGateFilter(deviceId, true, 10);
-        CaptureDevice.CaptureStopped += CaptureDevice_CaptureStopped;
-        ((IAudioFilter<NoiseGateFilteredWaveInEventArgs>)CaptureDevice).DataAvailable += CaptureDevice_DataAvailable;
-    }
-
-    [MemberNotNull(nameof(OutDevice))]
-    private void InitializeOutputDevice(string deviceId)
-    {
-        DisposeOutputDevice();
-        using var enumerator = new MMDeviceEnumerator();
-
-        OutDevice = new WasapiOut(enumerator.GetDevice(deviceId), AudioClientShareMode.Exclusive, true, 5);
-
-        var sine20Seconds = new SignalGenerator()
-        {
-            Gain = 0.3 * OutDevice.Volume,
-            Frequency = 1000,
-            Type = SignalGeneratorType.Sin,
-        }
-        .Take(TimeSpan.FromSeconds(5));
-
-        OutDevice.Init(sine20Seconds);
     }
 
     private void DisposeCaptureDevice()
@@ -271,6 +331,7 @@ internal partial class MainForm : Form
         {
             var outDevice = OutDevice;
             OutDevice = null;
+            outDevice.PlaybackStopped -= OutDevice_PlaybackStopped;
             outDevice.Stop();
             outDevice.Dispose();
         }

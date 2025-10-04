@@ -11,9 +11,15 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <AnalysisMode>all</AnalysisMode>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>Resources\later.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Resources\later.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lib.Harmony" Version="2.4.1" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
