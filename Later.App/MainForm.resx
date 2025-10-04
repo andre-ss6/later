@@ -135,11 +135,14 @@ If you like, you can click the button multiple times; The tool will calculate a 
 
 When you're done, stop recording (either clicking on the REC button or pressing R again).</value>
   </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="audioModeCombobox.ToolTip" xml:space="preserve">
     <value>Whether to use Exclusive or Shared mode. Exclusive will usually give better latency than Shared. However, be aware that:
 
-1) Exclusive bypasses Spatial Audio, so if you want to compare the latency cost of enabling those, you'll need to use Shared; and
-2) Different applications can use either mode, and not all devices support Exclusive mode; Notably, games rarely will use Exclusive. 
+1) Applications rarely use Exclusive mode; Notably, games almost never use it. Morever, not all devices support Exclusive mode; and
+2) Exclusive bypasses Spatial Audio, so if you want to compare the latency cost of enabling those, you'll need to use Shared.
 
 Thus, if you're interested in knowing what is your specific device latency in a specific application, knowing whether that application is using Exclusive or Shared mode can help you get more accurate results.
 
